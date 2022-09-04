@@ -7,14 +7,14 @@ namespace Assets.Code.Systems
 {
     class PlayerInputSystem : IEcsRunSystem, IEcsInitSystem
     {
-        private PlayerControl _playerControl;
+        private IInputService _playerControl;
 
         private readonly EcsWorld _world = null;
         private readonly EcsFilter<DirectionComponent> _inputFilter = null;
 
         public void Init()
         {
-            _playerControl = new PlayerControl();
+            _playerControl = new InputService();
         }
 
         public void Run()

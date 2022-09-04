@@ -8,18 +8,17 @@ namespace Assets.Code.Infrastructure
     class Game
     {
         private readonly EcsWorld _world;
-        private readonly EcsSystems _systems;
+        private readonly EcsSystems _updateSystems;
+        private readonly EcsSystems _fixedUpdateSystems;
         private readonly IGameFactory _gameFactory;
         private readonly IAssetProvider _assetProvider;
-
-        //TODO:
-        //private IGameFactory _gameFactory
-        //InitPlayerSystem
 
         public Game()
         {
             _world = new EcsWorld();
-            _systems = new EcsSystems(_world);
+            _updateSystems = new EcsSystems(_world);
+            _fixedUpdateSystems = new EcsSystems(_world);
+
             _assetProvider = new AssetProvider();
             _gameFactory = new GameFactory(_assetProvider);
 
@@ -27,15 +26,31 @@ namespace Assets.Code.Infrastructure
             InitSystems();
         }
 
+        private void InitSystems()
+        {
+            _updateSystems
+                .Add(new PlayerInitSystem(_assetProvider))
+                .Add(new PlayerInputSystem())
+                .Add(new MovementSystem());
+
+            _updateSystems.Init();
+            _fixedUpdateSystems.Init();
+        }
+
         ~Game()
         {
-            _systems.Destroy();
+            _updateSystems.Destroy();
             _world.Destroy();
         }
 
-        public void Run()
+        public void RunUpdate()
         {
-            _systems.Run();
+            _updateSystems.Run();
+        }
+
+        public void RunFixedUpdate()
+        {
+            _fixedUpdateSystems.Run();
         }
 
         private void InitEntities()
@@ -43,14 +58,5 @@ namespace Assets.Code.Infrastructure
 
         }
 
-        private void InitSystems()
-        {
-            _systems
-                .Add(new PlayerInitSystem(_assetProvider))
-                .Add(new PlayerInputSystem())
-                .Add(new MovementSystem());
-
-            _systems.Init();
-        }
     }
 }

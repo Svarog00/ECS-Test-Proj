@@ -3,12 +3,12 @@ using UnityEngine.InputSystem;
 
 namespace Assets.Code.Input
 {
-    class PlayerControl
+    class InputService : IInputService
     {
-        private Controls _inputSource;
-        private InputAction _movement;
+        private readonly Controls _inputSource;
+        private readonly InputAction _movement;
 
-        public PlayerControl()
+        public InputService()
         {
             _inputSource = new Controls();
 
@@ -21,7 +21,7 @@ namespace Assets.Code.Input
             return _movement.ReadValue<Vector2>();
         }
 
-        ~PlayerControl()
+        ~InputService()
         {
             _movement.Disable();
         }

@@ -5,10 +5,10 @@ namespace Assets.Code.Infrastructure.AssetManagment
 {
     public class AssetProvider : IAssetProvider
     {
-        public PlayerDataObject GetPlayerData()
+        public DataType GetData<DataType>(string path) where DataType : ScriptableObject
         {
             var obj = Resources.Load(AssetPaths.PlayerDataPath) as PlayerDataObject;
-            return obj;
+            return obj as DataType;
         }
 
         public GameObject Instantiate(string path)

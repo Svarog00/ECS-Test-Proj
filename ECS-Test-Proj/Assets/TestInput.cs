@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class TestInput : MonoBehaviour
 {
-    private PlayerControl _playerControl;
+    private InputService _playerControl;
 
     // Start is called before the first frame update
     void Start()
     {
-        _playerControl = new PlayerControl();
+        _playerControl = new InputService();
     }
 
     // Update is called once per frame

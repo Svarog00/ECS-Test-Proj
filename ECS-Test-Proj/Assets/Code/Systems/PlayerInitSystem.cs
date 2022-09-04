@@ -13,19 +13,22 @@ namespace Assets.Code.Systems
         private readonly EcsWorld _world = null;
         private readonly IAssetProvider _assetProvider;
 
-        public PlayerInitSystem(IAssetProvider gameFactory)
+        public PlayerInitSystem(IAssetProvider assetProvider)
         {
-            _assetProvider = gameFactory;
+            _assetProvider = assetProvider;
         }
 
         public void Init()
         {
-            PlayerDataObject playerData = _assetProvider.GetPlayerData();
+            PlayerDataObject playerData = _assetProvider.GetData<PlayerDataObject>(AssetPaths.PlayerDataPath);
 
             var player = _world.NewEntity();
 
             ref var movableComponent = ref player.Get<MovableComponent>();
+
             GameObject playerObject = GameObject.Instantiate(playerData.PlayerObjectPrefab, GameObject.FindGameObjectWithTag(InitialPointTag).transform);
+            playerObject.transform.parent = null;
+
             movableComponent.Transform = playerObject.transform;
             movableComponent.Speed = playerData.Speed;
             

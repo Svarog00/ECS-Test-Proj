@@ -11,11 +11,18 @@ namespace Assets.Code.Infrastructure
         void Start()
         {
             _game = new Game();
+
+            DontDestroyOnLoad(this);
         }
 
         private void Update()
         {
-            _game.Run();
+            _game.RunUpdate();
+        }
+
+        private void FixedUpdate()
+        {
+            _game.RunFixedUpdate();
         }
     }
 }

@@ -8,12 +8,12 @@ namespace Assets.Code.Infrastructure
     class EcsStartup : MonoBehaviour
     {
         private EcsWorld _world;
-        private EcsSystems _systems;
+        private EcsSystems _updateSystems;
 
         private void Start()
         {
             _world = new EcsWorld();
-            _systems = new EcsSystems(_world);
+            _updateSystems = new EcsSystems(_world);
 
             InitEntities();
             InitSystems();
@@ -23,12 +23,12 @@ namespace Assets.Code.Infrastructure
 
         private void Update()
         {
-            _systems.Run();
+            _updateSystems.Run();
         }
 
         private void OnDestroy()
         {
-            _systems.Destroy();
+            _updateSystems.Destroy();
             _world.Destroy();
         }
 
@@ -39,10 +39,10 @@ namespace Assets.Code.Infrastructure
 
         private void InitSystems()
         {
-            _systems.Add(new PlayerInputSystem());
-            _systems.Add(new MovementSystem());
+            _updateSystems.Add(new PlayerInputSystem());
+            _updateSystems.Add(new MovementSystem());
 
-            _systems.Init();
+            _updateSystems.Init();
         }
     }
 }

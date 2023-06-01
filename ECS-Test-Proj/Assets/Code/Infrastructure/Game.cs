@@ -1,17 +1,21 @@
 ﻿using Assets.Code.Infrastructure.AssetManagment;
 using Assets.Code.Infrastructure.Factory;
+using Assets.Code.Input;
 using Assets.Code.Systems;
 using Leopotam.Ecs;
+using System;
 
 namespace Assets.Code.Infrastructure
 {
-    class Game
+    class Game : IDisposable
     {
         private readonly EcsWorld _world;
         private readonly EcsSystems _updateSystems;
         private readonly EcsSystems _fixedUpdateSystems;
+
         private readonly IGameFactory _gameFactory;
         private readonly IAssetProvider _assetProvider;
+        private readonly IInputService _inputService;
 
         public Game()
         {
@@ -20,6 +24,7 @@ namespace Assets.Code.Infrastructure
             _fixedUpdateSystems = new EcsSystems(_world);
 
             _assetProvider = new AssetProvider();
+            _inputService = new InputService();
             _gameFactory = new GameFactory(_assetProvider);
 
             InitEntities();
@@ -30,17 +35,11 @@ namespace Assets.Code.Infrastructure
         {
             _updateSystems
                 .Add(new PlayerInitSystem(_assetProvider))
-                .Add(new PlayerInputSystem())
+                .Add(new PlayerInputSystem(_inputService))
                 .Add(new MovementSystem());
 
             _updateSystems.Init();
             _fixedUpdateSystems.Init();
-        }
-
-        ~Game()
-        {
-            _updateSystems.Destroy();
-            _world.Destroy();
         }
 
         public void RunUpdate()
@@ -58,5 +57,11 @@ namespace Assets.Code.Infrastructure
 
         }
 
+        public void Dispose()
+        {
+            _updateSystems.Destroy();
+            _fixedUpdateSystems.Destroy();
+            _world.Destroy();
+        }
     }
 }

@@ -5,16 +5,16 @@ using UnityEngine;
 
 namespace Assets.Code.Systems
 {
-    class PlayerInputSystem : IEcsRunSystem, IEcsInitSystem
+    class PlayerInputSystem : IEcsRunSystem
     {
         private IInputService _playerControl;
 
         private readonly EcsWorld _world = null;
         private readonly EcsFilter<DirectionComponent> _inputFilter = null;
 
-        public void Init()
+        public PlayerInputSystem(IInputService inputService)
         {
-            _playerControl = new InputService();
+            _playerControl = inputService;
         }
 
         public void Run()
